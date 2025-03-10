@@ -24,7 +24,7 @@ class Personagem:
      self.__life -= damage
      if self.__life < 0:
        self.__life = 0
-   
+
   def attack(self, target):
     damage = self.__level * 2
     self.take_damage(damage)
@@ -40,6 +40,12 @@ class Heroi(Personagem):
   
   def show_details(self):
     return f"{super().show_details()}\nTipo: {self.get_skill()}"
+  
+  def special_attack(self, target):
+    damage = self.get_level() * 5 # Dano aumentado
+    target.take_damage(damage)
+    print(f"{self.get_name()} usou a habilidade especial {self.get_skill()} em {target.get_name()} e causou {damage} de dano!")
+
 
 class Inimigo(Personagem):
   def __init__(self, name, life, level, type):
@@ -72,8 +78,14 @@ class Jogo:
 
       if escolha == '1':
         self.heroi.attack(self.inimigo)
+      elif escolha == '2':
+        self.heroi.special_attack(self.inimigo)
       else:
         print("Escolha inválida. Escolha novamente.")
+
+      if self.heroi.get_life() > 0:
+        # Inimigo ataca o heroi
+        self.inimigo.attack(self.heroi)
 
       if self.heroi.get_life() > 0:
         print("\nParabéns você venceu a batalha!")
