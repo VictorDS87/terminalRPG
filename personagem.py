@@ -19,6 +19,16 @@ class Personagem:
 
   def show_details(self):
     return f"Name: {self.__name}\nLife: {self.__life}\nLevel: {self.__level}"
+  
+  def take_damage(self, damage):
+     self.__life -= damage
+     if self.__life < 0:
+       self.__life = 0
+   
+  def attack(self, target):
+    damage = self.__level * 2
+    self.take_damage(damage)
+    print(f"{self.get_name()} atacou {target.get_name()} e causou {damage} de dano!")
 
 class Heroi(Personagem):
   def __init__(self, name, life, level, skill):
@@ -42,7 +52,34 @@ class Inimigo(Personagem):
   def show_details(self):
     return f"{super().show_details()}\nTipo: {self.get_type()}"
 
-heroi = Heroi(name='Pen Dragon', level="7", life="10", skill="Eclipse Solar")
-print(heroi.show_details())
-inimigo = Inimigo(name='Goblin', level="12", life="25", type="Humanoide")
-print(inimigo.show_details())
+class Jogo:
+  """ Classe orquestradora do jogo """
+ 
+  def __init__(self):
+    self.heroi = Heroi(name="Herói", life=100, level=5, skill="Super Força")
+    self.inimigo = Inimigo(name="Morcego", life=50, level=3, type="Voador")
+
+  def iniciar_batalha(self):
+    """ Fazer a gestão da batalha em turnos """
+    print("Iniciando batalha!")
+    while self.heroi.get_life() > 0 and self.inimigo.get_life() > 0:
+      print("\nDetalhes dos Personagens:")
+      print(self.heroi.show_details())
+      print(self.inimigo.show_details())
+
+      input("Pressione Enter para atacar...")
+      escolha = input("Escolha (1 - Ataque Normal, 2 - Ataque Especial): ")
+
+      if escolha == '1':
+        self.heroi.attack(self.inimigo)
+      else:
+        print("Escolha inválida. Escolha novamente.")
+
+      if self.heroi.get_life() > 0:
+        print("\nParabéns você venceu a batalha!")
+      else:
+        print("\nVocê foi derrotado!")
+ 
+# Criar instância do jogo e iniciar batalha
+jogo = Jogo()
+jogo.iniciar_batalha()
